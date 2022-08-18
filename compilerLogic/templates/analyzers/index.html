@@ -1,2 +1,11 @@
-<h1>Main Page</h1>
-<p> {{data}} </p>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/indexPage.css' %}">
+
+<h1>Página Principal</h1>
+
+<a class="fcc-btn" href="http://localhost:8000/compiler/lex-analyzer/">Analizador Léxico</a>  
+
+<a class="fcc-btn" href="http://localhost:8000/compiler/syntactic-analyzer/">Analizador Sintáctico</a>
+
+<a class="fcc-btn" href="http://localhost:8000/compiler/semantic-analyzer/">Analizador Semántico</a>
+

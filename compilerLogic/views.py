@@ -8,7 +8,7 @@ def index(request):
     return render(request, 'analyzers/index.html', context)
 
 def lex_analyzer(request):
-    return HttpResponse("Cargar página para que elijan archivos a poder analizarse")
+    return render(request, 'analyzers/lexiconAnalyzer.html')
 
 def results(request):
     data = analizadorLexico.sendData()
