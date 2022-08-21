@@ -81,49 +81,43 @@ def t_error(t):
 	print ("caracter ilegal '%s'" % t.value[0])
 	t.lexer.skip(1)
 
-# def buscarFicheros(directorio):
-# 	ficheros = []
-# 	numArchivo = ''
-# 	respuesta = False
-# 	cont = 1
+def buscarFicheros(directorio, fileNumber):
+	ficheros = []
+	numArchivo = ''
+	respuesta = False
+	cont = 1
 
-# 	for base, dirs, files in os.walk(directorio):
-# 		ficheros.append(files)
+	for base, dirs, files in os.walk(directorio):
+		ficheros.append(files)
 
-	# for file in files:
-	# 	print (str(cont)+". "+file)
-	# 	cont = cont+1
+	for file in files:
+		print (str(cont)+". "+file)
+		cont = cont+1
 
-	# while respuesta == False:
-	# 	numArchivo = input('\nNumero del test: ')
-	# 	for file in files:
-	# 		if file == files[int(numArchivo)-1]:
-	# 			respuesta = True
-	# 			break
+	while respuesta == False:
+		numArchivo = fileNumber
+		for file in files:
+			if file == files[int(numArchivo)-1]:
+				respuesta = True
+				break
 
-	# print ("Has escogido \"%s\" \n" %files[int(numArchivo)-1])
+	print ("Has escogido \"%s\" \n" %files[int(numArchivo)-1])
 
-	# return files[int(numArchivo)-1]
+	return files[int(numArchivo)-1]
 
-#directorio = os.path.dirname(os.path.abspath('./prueba1.pl0'))+r'\test'
-#archivo = buscarFicheros(directorio)
-#test = (directorio) + '\\' + 'prueba1.pl0'
-test = r'C:\Users\gerar\Documents\DJANGO\Compilador\compilerLogic\controller\test\prueba1.pl0'
-fp = codecs.open(test,"r","utf-8")
-cadena = fp.read()
-fp.close()
-
+directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
 analizador = lex.lex()
 
-analizador.input(cadena)
-
-def sendData():
+def doAnalysis(fileNumber):
+	archivo = buscarFicheros(directorio, fileNumber)
+	test = (directorio) + '\\' +(archivo)
+	fp = codecs.open(test,"r","utf-8")
+	cadena = fp.read()
+	fp.close()
+	analizador.input(cadena)
 	data = ''
 	while True:
 		tok = analizador.token()
 		if not tok : break
 		data += '\n' + str(tok)
 	return data
-
-
-
