@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Analizador Léxico {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Analizador Léxico</h4>
+                  <p class="card-category"> La tabla muestra los resultados del análisis léxico del archivo <br>TOKENS:</br>
+                  </p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table" id="lexicoTable">
+                      <thead class=" text-primary">
+                        <th>
+                          ID
+                        </th>
+                        <th>
+                          Tipo
+                        </th>
+                        <th>
+                          Valor
+                        </th>
+                        <th>
+                          Nro Linea
+                        </th>
+                        <th>
+                          Posición
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% for token in data %}
+                        <tr>
+                          <td>
+                            {{forloop.counter}}
+                          </td>
+                          <td>
+                            {{token.type}}
+                          </td>
+                          <td>
+                            {{token.value}}
+                          </td>
+                          <td class="text-primary">
+                            {{token.lineno}}
+                          </td>
+                          <td class="text-primary">
+                            {{token.lexpos}}
+                          </td>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+  $(document).ready( function () {
+    $('#lexicoTable').DataTable();
+} );
+</script>
+{% endblock javascripts %}

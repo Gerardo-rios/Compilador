@@ -1,21 +1,18 @@
 import ply.lex as lex
-import re
 import codecs
 import os
-import sys
 
-from compiler.settings import BASE_DIR
 
 DIRECTORIO = os.path.abspath(os.path.join('compilerLogic',"controller","test"))
 
 reservadas = ['BEGIN','END','IF','THEN','WHILE','DO','CALL','CONST',
-		'VAR','PROCEDURE','OUT','IN','ELSE'
+		'VAR','PROCEDURE','OUT','IN','ELSE',"ODD"
 		]
 
 tokens = reservadas+['ID','NUMBER','PLUS','MINUS','TIMES','DIVIDE',
-		'ODD','ASSIGN','NE','LT','LTE','GT','GTE',
+		'ASSIGN','NE','LT','LTE','GT','GTE',
 		'LPARENT', 'RPARENT','COMMA','SEMMICOLOM',
-		'DOT','UPDATE'
+		'DOT','UPDATE', 'EXCLAMATION'
 		]
 
 
@@ -57,6 +54,7 @@ t_COMMA = r','
 t_SEMMICOLOM = r';'
 t_DOT = r'\.'
 t_UPDATE = r':='
+t_EXCLAMATION= r'!'
 
 def t_ID(t):
 	r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -108,17 +106,25 @@ def buscarFicheros(DIRECTORIO, fileNumber):
 	return files[int(numArchivo)-1]
 
 
-analizador = lex.lex()
+
+
 def doAnalysis(fileNumber):
   archivo = buscarFicheros(DIRECTORIO, fileNumber)
   test = os.path.join(DIRECTORIO,archivo)
   fp = codecs.open(test,"r","utf-8")
   cadena = fp.read()
   fp.close()
+  analizador = lex.lex()
   analizador.input(cadena)
-  data = ''
+  data = []
   while True:
-    tok = analizador.token()
-    if not tok : break
-    data += '\n' + str(tok)
+    token = analizador.token()
+    if not token : break
+    # token es un objeto de la clase ply.lex.LEXTOKEN
+    # dicha clase tiene los siguientes atributos:
+    # type  = tipo del token 
+    # value = valor token 
+    # lineno = número de linea del token 
+    # lexpos = posicion del token en la linea (número en espacios donde inicia token) 
+    data.append(token)
   return data
