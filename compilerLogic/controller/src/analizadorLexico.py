@@ -4,6 +4,10 @@ import codecs
 import os
 import sys
 
+from compiler.settings import BASE_DIR
+
+DIRECTORIO = os.path.abspath(os.path.join('compilerLogic',"controller","test"))
+
 reservadas = ['BEGIN','END','IF','THEN','WHILE','DO','CALL','CONST',
 		'VAR','PROCEDURE','OUT','IN','ELSE'
 		]
@@ -81,19 +85,17 @@ def t_error(t):
 	print ("caracter ilegal '%s'" % t.value[0])
 	t.lexer.skip(1)
 
-def buscarFicheros(directorio, fileNumber):
+def buscarFicheros(DIRECTORIO, fileNumber):
 	ficheros = []
 	numArchivo = ''
 	respuesta = False
 	cont = 1
-
-	for base, dirs, files in os.walk(directorio):
+	for base, dirs, files in os.walk(DIRECTORIO):
 		ficheros.append(files)
 
 	for file in files:
 		print (str(cont)+". "+file)
 		cont = cont+1
-
 	while respuesta == False:
 		numArchivo = fileNumber
 		for file in files:
@@ -105,19 +107,18 @@ def buscarFicheros(directorio, fileNumber):
 
 	return files[int(numArchivo)-1]
 
-directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
-analizador = lex.lex()
 
+analizador = lex.lex()
 def doAnalysis(fileNumber):
-	archivo = buscarFicheros(directorio, fileNumber)
-	test = (directorio) + '\\' +(archivo)
-	fp = codecs.open(test,"r","utf-8")
-	cadena = fp.read()
-	fp.close()
-	analizador.input(cadena)
-	data = ''
-	while True:
-		tok = analizador.token()
-		if not tok : break
-		data += '\n' + str(tok)
-	return data
+  archivo = buscarFicheros(DIRECTORIO, fileNumber)
+  test = os.path.join(DIRECTORIO,archivo)
+  fp = codecs.open(test,"r","utf-8")
+  cadena = fp.read()
+  fp.close()
+  analizador.input(cadena)
+  data = ''
+  while True:
+    tok = analizador.token()
+    if not tok : break
+    data += '\n' + str(tok)
+  return data
