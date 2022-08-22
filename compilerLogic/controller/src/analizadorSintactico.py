@@ -5,6 +5,7 @@ import re
 from analizadorLexico import tokens
 from sys import stdin
 from analizadorSemantico import *
+import subprocess
 
 precedence = (
 	('right','ID','CALL','BEGIN','IF','WHILE'),
@@ -228,7 +229,7 @@ def p_error(p):
 	print ("Error de sintaxis ", p)
 	#print "Error en la linea "+str(p.lineno)
 
-def buscarFicheros(directorio):
+def buscarFicheros(directorio, fileNumber):
 	ficheros = []
 	numArchivo = ''
 	respuesta = False
@@ -242,7 +243,7 @@ def buscarFicheros(directorio):
 		cont = cont+1
 
 	while respuesta == False:
-		numArchivo = input('\nNumero del test: ')
+		numArchivo = fileNumber
 		for file in files:
 			if file == files[int(numArchivo)-1]:
 				respuesta = True
@@ -258,24 +259,25 @@ def traducir(result):
 	graphFile.close()
 	print ("El programa traducido se guardo en \"graphviztrhee.vz\"")
 
-directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
-archivo = buscarFicheros(directorio)
-test = (directorio) + '\\' +(archivo)
-fp = codecs.open(test,"r","utf-8")
-cadena = fp.read()
-fp.close()
+def doAnalysis(fileNumber = 0, inputFromRequest = ''):
+	yacc.yacc()
+	if (inputFromRequest != '' and fileNumber == 0):
+		parsedData = yacc.parse(inputFromRequest,debug=1)
+		traducir(parsedData)
+	else:
+		directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
+		archivo = buscarFicheros(directorio, fileNumber)
+		test = (directorio) + '\\' +(archivo)
+		fp = codecs.open(test,"r","utf-8")
+		cadena = fp.read()
+		fp.close()
+		result = yacc.parse(cadena,debug=1)
+		traducir(result)
+	
+	subprocess.run("graphBash.cmd" or "graphBash.sh")
 
-yacc.yacc()
-result = yacc.parse(cadena,debug=1)
-
-#result.imprimir(" ")
-#print result.traducir()
-traducir(result)
-
-
-
-#print result
-
+cadenosis = "CONST\nm=7,\nn=85;\n#flgmsdglsm .,,sdf'\nVAR\n  x, y, z, q, r;\nPROCEDURE multiply;\nVAR a, b;\nBEGIN\n  a := x;\n  b := y;\n  z := 0;\nEND;"
+print(doAnalysis(0, cadenosis))
 
 
 
