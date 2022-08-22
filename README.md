@@ -9,7 +9,7 @@ DJANGO_SECRET_KEY=..........
 ```
 
 # Requerimientos
-Instalar los respectivos requerimientos, utilizando el siguiente comando: `pip install requeriments.txt`
+Instalar los respectivos requerimientos, utilizando el siguiente comando: `pip install -r requeriments.txt`
 
 # Uso de los métodos
 
