@@ -27,7 +27,8 @@ def results(request):
     PASANDOLE EL NUMERO DE ARCHIVO EN ESTE CASO
     Y EN ESTA VISTA SE CARGARÍAN LOS RESULTADOS
     """
-    data = analizadorLexico.doAnalysis(request.fileNumber)
+    fileIndex = request.GET.get('FileIndex', 1)
+    data = analizadorLexico.doAnalysis(fileIndex)
     return render(request, 'analyzers/result.html', {'data': data})
 
 
