@@ -11,6 +11,8 @@ DJANGO_SECRET_KEY=..........
 # Requerimientos
 Instalar los respectivos requerimientos, utilizando el siguiente comando: `pip install -r requeriments.txt`
 
+Para la generación de la liberia es necesario descargar la libreria [graphviz](https://graphviz.org/download/)
+
 # Uso de los métodos
 
 # doAnalysis(number, string):
