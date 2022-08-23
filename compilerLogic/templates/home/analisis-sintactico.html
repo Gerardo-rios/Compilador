@@ -1,0 +1,54 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Maps {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div id="img-container" class="col-6"  >
+      <img class="img-fluid" alt="Responsive image" src="/static/assets/img/graphGenerated.png"> </img>
+    </div>
+    
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://unpkg.com/js-image-zoom@0.7.0/js-image-zoom.js" type="application/javascript"></script>
+
+
+<script>
+
+  //function zoom(){
+  //  let element = document.getElementById("img-container")
+  //  if(element.classList.contains("col-12")){
+  //    element.classList.remove("col-12")
+  //    element.classList.add("col-6")
+//
+  //  }else{
+  //    element.classList.remove("col-6")
+  //    element.classList.add("col-12")
+//
+  //  }
+  //}
+//
+//
+//
+  var options2 = {
+      fillContainer: true,
+      zoomPosition: 'right',
+      offset: {vertical: 0, horizontal: 0},
+      zoomStyle : {
+        'border': '1px solid #000',
+        'background-color': '#fff',
+        'opacity': '0.5'
+      }
+  };
+  
+  new ImageZoom(document.getElementById("img-container"), options2);
+  
+  </script>
+  
+{% endblock javascripts %}
