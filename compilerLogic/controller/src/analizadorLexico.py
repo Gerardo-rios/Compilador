@@ -127,10 +127,11 @@ def doAnalysis(fileNumber= None, inputCadena=''):
   analizador = lex.lex()
 
 
-  if hasattr(analizador, "lexstatestack"):
-    print("analizador", analizador.lexstatestack)
-    while len(analizador.lexstatestack) > 0:
-      analizador.pop_state()
+
+  #if hasattr(analizador, "lexstatestack"):
+  #  print("analizador", analizador.lexstatestack)
+  #  while len(analizador.lexstatestack) > 0:
+  #    analizador.pop_state()
   
   analizador.input(cadena)
   data = []	
@@ -144,4 +145,4 @@ def doAnalysis(fileNumber= None, inputCadena=''):
     # lineno = número de linea del token 
     # lexpos = posicion del token en la linea (número en espacios donde inicia token) 
     data.append(token)
-  return data
+  return data, analizador

@@ -66,8 +66,10 @@ def pages(request):
         if load_template == 'resultados.html':
             fileIndex = request.GET.get('dataFile', '0')
             inputCadena = request.GET.get('cadena', '')
-            data = analizadorLexico.doAnalysis(fileIndex, inputCadena)
-            analizadorSintactico.doAnalysis(fileIndex, inputCadena)
+            data , analizador = analizadorLexico.doAnalysis(fileIndex, inputCadena)
+            print("data",data)
+            print("analizador",analizador)
+            analizadorSintactico.doAnalysis(fileIndex, inputCadena, analizador)
             context['data'] = data
                 
         html_template = loader.get_template('home/' + load_template)

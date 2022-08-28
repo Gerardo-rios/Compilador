@@ -1,5 +1,17 @@
 txt = " "
 cont = 0
+
+def state():
+  global txt, cont
+  print("txt",txt)
+  print("cont",cont)
+  
+  
+def restartState():
+  global cont, txt
+  cont = 0
+  txt = ""
+
 def incremetarContador():
 	global cont
 	cont +=1
@@ -1130,8 +1142,8 @@ class Number(Nodo):
 
 		return id
 
-# class empty(Nodo):
-# 	def __init__(self,name):
-# 		pass
+class empty(Nodo):
+	def __init__(self,name):
+		pass
 
 

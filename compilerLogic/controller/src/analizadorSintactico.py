@@ -4,8 +4,10 @@ import codecs
 import re
 from .analizadorLexico import tokens
 from sys import stdin
-from .analizadorSemantico import *
+from .analizadorSemantico import * 
 import subprocess
+
+
 
 DIRECTORIO = os.path.abspath(os.path.join('compilerLogic',"controller","test"))
 
@@ -262,7 +264,7 @@ def traducir(result):
 		graphFile.close()
 	print ("El programa traducido se guardo en \"graphviztrhee.vz\"")
 
-def doAnalysis(fileNumber = '0', inputFromRequest = ''):
+def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 	try:
 		if (inputFromRequest != '' and fileNumber == '0'):
 			parser = yacc.yacc()
@@ -278,13 +280,17 @@ def doAnalysis(fileNumber = '0', inputFromRequest = ''):
 			cadena = fp.read()
 			print("cadena: ", cadena)
 			parser = yacc.yacc()
-			if hasattr(parser, "lexstatestack"):
-				print("analizador", parser.lexstatestack)
-			while len(parser.lexstatestack) > 0:
-				parser.pop_state()
-			
+			#if hasattr(parser, "lexstatestack"):
+			#	
+			#	print("analizador", parserl.lexstatestack)
+			#while len(parser.lexstatestack) > 0:
+			#	parser.pop_state()
+			#
 			fp.close()
-			result = parser.parse(cadena)
+			result = parser.parse(cadena, lexer=lexer)
+			state()
+			restartState()
+			state()
 			traducir(result)
 			subprocess.run("compilerLogic/controller/src/graphBash.sh")
 	except Exception as e:
