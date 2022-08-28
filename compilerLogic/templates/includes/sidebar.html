@@ -9,30 +9,17 @@
         <ul class="nav">
 
           <li class="nav-item {% if 'index' in segment %} active {% endif %}">
-            <a class="nav-link" href="/compiler">
+            <a class="nav-link" href="/compiler/">
               <i class="material-icons">home</i>
               <p>Inicio</p>
             </a>
           </li>
-          <li class="nav-item {% if 'analizador-lexico' in segment %} active {% endif %}">
-            <a class="nav-link" href="/compiler/analizador-lexico.html">
+          <li class="nav-item {% if 'resultados' in segment %} active {% endif %}">
+            <a class="nav-link" href="/compiler/resultados.html?cadena={{cadena}}&dataFile={{dataFile}}">
               <i class="material-icons">content_paste</i>
-              <p>Analizador Léxico</p>
+              <p>Resultados</p>
             </a>
-          </li>
-          <li class="nav-item {% if 'analisis-sintactico' in segment %} active {% endif %}">
-            <a class="nav-link" href="/compiler/analisis-sintactico.html">
-              <i class="material-icons">bubble_chart</i>
-              <p>Análsis sintáctico</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'analisis-semantico' in segment %} active {% endif %}">
-            <a class="nav-link" href="/compiler/analisis-semantico.html">
-              <i class="material-icons">library_books</i>
-              <p>Análisis semántico</p>
-            </a>
-          </li>
-          
+          </li>          
         </ul>
       </div>
 

@@ -2,10 +2,12 @@ import ply.yacc as yacc
 import os
 import codecs
 import re
-from analizadorLexico import tokens
+from .analizadorLexico import tokens
 from sys import stdin
-from analizadorSemantico import *
+from .analizadorSemantico import *
 import subprocess
+
+DIRECTORIO = os.path.abspath(os.path.join('compilerLogic',"controller","test"))
 
 precedence = (
 	('right','ID','CALL','BEGIN','IF','WHILE'),
@@ -254,30 +256,42 @@ def buscarFicheros(directorio, fileNumber):
 	return files[int(numArchivo)-1]
 
 def traducir(result):
-	graphFile = open('graphviztrhee.vz','w')
-	graphFile.write(result.traducir())
-	graphFile.close()
+	with open('graphviztrhee.vz','w') as graphFile:
+		graphFile.truncate(0)
+		graphFile.write(result.traducir())
+		graphFile.close()
 	print ("El programa traducido se guardo en \"graphviztrhee.vz\"")
 
-def doAnalysis(fileNumber = 0, inputFromRequest = ''):
-	yacc.yacc()
-	if (inputFromRequest != '' and fileNumber == 0):
-		parsedData = yacc.parse(inputFromRequest,debug=1)
-		traducir(parsedData)
-	else:
-		directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
-		archivo = buscarFicheros(directorio, fileNumber)
-		test = (directorio) + '\\' +(archivo)
-		fp = codecs.open(test,"r","utf-8")
-		cadena = fp.read()
-		fp.close()
-		result = yacc.parse(cadena,debug=1)
-		traducir(result)
-	
-	subprocess.run("graphBash.cmd" or "graphBash.sh")
+def doAnalysis(fileNumber = '0', inputFromRequest = ''):
+	try:
+		if (inputFromRequest != '' and fileNumber == '0'):
+			parser = yacc.yacc()
+			cadena= inputFromRequest.replace('\r\n', '\n')
+			parsedData = yacc.parse(cadena,debug=1)
+			traducir(parsedData)
+			subprocess.run("compilerLogic/controller/src/graphBash.sh")
+		else:	
+			parser = yacc.yacc()
+			archivo = f'prueba{fileNumber}.pl0'
+			test = os.path.join(DIRECTORIO,archivo)
+			fp = codecs.open(test,"r","utf-8")
+			cadena = fp.read()
+			print("cadena: ", cadena)
+			parser = yacc.yacc()
+			if hasattr(parser, "lexstatestack"):
+				print("analizador", parser.lexstatestack)
+			while len(parser.lexstatestack) > 0:
+				parser.pop_state()
+			
+			fp.close()
+			result = parser.parse(cadena)
+			traducir(result)
+			subprocess.run("compilerLogic/controller/src/graphBash.sh")
+	except Exception as e:
+			print(e)
 
-cadenosis = "CONST\nm=7,\nn=85;\n#flgmsdglsm .,,sdf'\nVAR\n  x, y, z, q, r;\nPROCEDURE multiply;\nVAR a, b;\nBEGIN\n  a := x;\n  b := y;\n  z := 0;\nEND;"
-print(doAnalysis(0, cadenosis))
+#cadenosis = "CONST\nm=7,\nn=85;\n#flgmsdglsm .,,sdf'\nVAR\n  x, y, z, q, r;\nPROCEDURE multiply;\nVAR a, b;\nBEGIN\n  a := x;\n  b := y;\n  z := 0;\nEND;"
+#print(doAnalysis(0, cadenosis))
 
 
 

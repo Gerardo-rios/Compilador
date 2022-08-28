@@ -13,12 +13,12 @@ class Null(Nodo):
 		self.type = 'void'
 
 	def imprimir(self,ident):
-		print (ident + "nodo nulo")
+		print (ident + "E")
 
 	def traducir(self):
 		global txt
 		id = incremetarContador()
-		txt += id+"[label= "+"nodo_nulo"+"]"+"\n\t"
+		txt += id+"[label= "+self.type+"E"+"]"+"\n\t"
 
 		return id
 
