@@ -270,6 +270,7 @@ def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 			parser = yacc.yacc()
 			cadena= inputFromRequest.replace('\r\n', '\n')
 			parsedData = yacc.parse(cadena,debug=1)
+			restartState()
 			traducir(parsedData)
 			subprocess.run("compilerLogic/controller/src/graphBash.sh")
 		else:	
@@ -288,9 +289,9 @@ def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 			#
 			fp.close()
 			result = parser.parse(cadena, lexer=lexer)
-			state()
+			#state()
 			restartState()
-			state()
+			#state()
 			traducir(result)
 			subprocess.run("compilerLogic/controller/src/graphBash.sh")
 	except Exception as e:
