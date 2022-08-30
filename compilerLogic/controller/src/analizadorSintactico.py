@@ -37,7 +37,7 @@ def p_block(p):
 
 def p_constDecl(p):
 	'''constDecl : CONST constAssignmentList SEMMICOLOM'''
-	p[0] = constDecl(p[2],"constDecl")
+	p[0] = constDecl(p[2],"constDecl", 'number')
 	#print "constDecl"
 
 def p_constDeclEmpty(p):
@@ -47,17 +47,17 @@ def p_constDeclEmpty(p):
 
 def p_constAssignmentList1(p):
 	'''constAssignmentList : ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList1(Id(p[1]),Assign(p[2]),Number(p[3]),"constAssignmentList1")
+	p[0] = constAssignmentList1(Id(p[1]),Assign(p[2]),Number(p[3]),"constAssignmentList1",'number')
 	#print "constAssignmentList 1"
 
 def p_constAssignmentList2(p):
 	'''constAssignmentList : constAssignmentList COMMA ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList2(p[1],Id(p[3]),Assign(p[4]),Number(p[5]),"constAssignmentList2")
+	p[0] = constAssignmentList2(p[1],Id(p[3]),Assign(p[4]),Number(p[5]),"constAssignmentList2",'number')
 	#print "constAssignmentList 2"
 
 def p_varDecl1(p):
 	'''varDecl : VAR identList SEMMICOLOM'''
-	p[0] = varDecl1(p[2],"VarDecl1")
+	p[0] = varDecl1(p[2],"VarDecl1",'number')
 	#print "varDecl 1"
 
 def p_varDeclEmpty(p):
@@ -212,12 +212,12 @@ def p_multiplyingOperator2(p):
 
 def p_factor1(p):
 	'''factor : ID'''
-	p[0] = factor1(Id(p[1]),"factor1")
+	p[0] = factor1(Id(p[1]),"factor1" )
 	#print "factor 1"
 
 def p_factor2(p):
 	'''factor : NUMBER'''
-	p[0] = factor2(Number(p[1]),"factor2")
+	p[0] = factor2(Number(p[1]),"factor2", 'number')
 	#print "factor 1"
 
 def p_factor3(p):
@@ -257,12 +257,15 @@ def buscarFicheros(directorio, fileNumber):
 
 	return files[int(numArchivo)-1]
 
-def traducir(result):
-	with open('graphviztrhee.vz','w') as graphFile:
+def traducir(data, fileName):
+	with open(f'{fileName}.vz','w') as graphFile:
 		graphFile.truncate(0)
-		graphFile.write(result.traducir())
+		graphFile.write(data)
 		graphFile.close()
-	print ("El programa traducido se guardo en \"graphviztrhee.vz\"")
+	print (f"El programa traducido se guardo en \"{fileName}.vz\"")
+	#TODO: Add argument to bash that match filename input and out fileName .png
+	subprocess.run(["compilerLogic/controller/src/graphBash.sh", f'{fileName}', f'{fileName}']) #TODO: MAYBE THIS NOT WORK FOR WINDOWS
+	
 
 def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 	try:
@@ -271,8 +274,10 @@ def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 			cadena= inputFromRequest.replace('\r\n', '\n')
 			parsedData = yacc.parse(cadena,debug=1)
 			restartState()
-			traducir(parsedData)
-			subprocess.run("compilerLogic/controller/src/graphBash.sh")
+			traducir(parsedData.traducir(), "graphviztrhee")
+			restartState()
+			traducir(parsedData.traducir(withType=True), "semantic")
+
 		else:	
 			parser = yacc.yacc()
 			archivo = f'prueba{fileNumber}.pl0'
@@ -292,8 +297,9 @@ def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 			#state()
 			restartState()
 			#state()
-			traducir(result)
-			subprocess.run("compilerLogic/controller/src/graphBash.sh")
+			traducir(result.traducir(), "sintactico")
+			restartState()
+			traducir(result.traducir(withType=True), "semantico")
 	except Exception as e:
 			print(e)
 
