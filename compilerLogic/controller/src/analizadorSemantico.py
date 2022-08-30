@@ -42,7 +42,6 @@ class Null(Nodo):
 		global txt
 		id = incremetarContador()
 		txt += getNameHasType(id, self.type, self.tipo, withType)
-
 		return id
 
 class program(Nodo):
@@ -262,7 +261,7 @@ class varDecl1(Nodo):
 	def traducir(self,withType=False):
 		global txt
 		id = incremetarContador()
-
+		print("withType",withType)
 		son1 = self.son1.traducir(withType)
 
 		txt += getNameHasType(id, self.name, self.tipo, withType)
@@ -670,7 +669,7 @@ class relation4(Nodo):
 
 		son1 = self.son1.traducir(withType)
 
-		txt += id + "[label= "+self.name+"]"+"\n\t"
+		txt += getNameHasType(id, self.name, self.tipo, withType)
 		txt += id + " -> " + son1 + "\n\t"
 
 		return id

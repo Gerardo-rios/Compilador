@@ -1,4 +1,8 @@
 @ECHO OFF
-PowerShell.exe -Command "dot -Tpng .\graphviztrhee.vz -o ../../static/graphs/graphGenerated.png"
+Param(
+  [string]$file
+)
+
+PowerShell.exe -Command "dot -Tpng .\$file.vz -o ../../static/graphs/$file.png"
 
 ECHO "Imagen Creada"

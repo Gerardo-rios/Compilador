@@ -71,9 +71,13 @@
                 </p>
               </div>
               <div class="card-body">
-                <div id="img-container" class="col-6"  >
+                <div id="img-container-sin" class="col-6"  >
                   <img class="img-fluid" alt="Responsive image" src="/static/assets/img/sintactico.png"> </img>
                 </div>
+                <hr/>
+
+                <a class="btn btn-primary" style="font-size:xx-small;"href="/static/assets/img/semantico.png" target="_blank" >Pantalla completa</a> 
+                
               </div>
             </div>
           </div>
@@ -88,11 +92,15 @@
               </p>
             </div>
             <div class="card-body">
-              <div id="img-container" class="col-6"  >
+              <div id="img-container-sem" class="col-6"  >
                 <img class="img-fluid" alt="Responsive image" src="/static/assets/img/semantico.png"> </img>
               </div>
+              <hr/>
+
+              <a class="btn btn-primary" style="font-size:xx-small;"href="/static/assets/img/semantico.png" target="_blank" >Pantalla completa</a> 
+              
             </div>
-          </div>
+          </div>>
         </div>
     </div>
 
@@ -136,7 +144,8 @@
       }
   };
   
-  new ImageZoom(document.getElementById("img-container"), options2);
+  new ImageZoom(document.getElementById("img-container-sem"), options2);
+  new ImageZoom(document.getElementById("img-container-sin"), options2);
   
   
 </script>

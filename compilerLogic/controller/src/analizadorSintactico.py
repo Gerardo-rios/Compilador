@@ -6,6 +6,7 @@ from .analizadorLexico import tokens
 from sys import stdin
 from .analizadorSemantico import * 
 import subprocess
+import platform
 
 
 
@@ -47,12 +48,12 @@ def p_constDeclEmpty(p):
 
 def p_constAssignmentList1(p):
 	'''constAssignmentList : ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList1(Id(p[1]),Assign(p[2]),Number(p[3]),"constAssignmentList1",'number')
+	p[0] = constAssignmentList1(Id(p[1],'number'),Assign(p[2]),Number(p[3],'number'),"constAssignmentList1",'number')
 	#print "constAssignmentList 1"
 
 def p_constAssignmentList2(p):
 	'''constAssignmentList : constAssignmentList COMMA ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList2(p[1],Id(p[3]),Assign(p[4]),Number(p[5]),"constAssignmentList2",'number')
+	p[0] = constAssignmentList2(p[1],Id(p[3],'number'),Assign(p[4]),Number(p[5],'number'),"constAssignmentList2",'number')
 	#print "constAssignmentList 2"
 
 def p_varDecl1(p):
@@ -87,7 +88,7 @@ def p_procDeclEmpty(p):
 
 def p_statement1(p):
 	'''statement : ID UPDATE expression'''
-	p[0] = statement1(Id(p[1]),Update(p[2]),p[3],"statement1")
+	p[0] = statement1(Id(p[1]),Update(p[2]),p[3],"statement1",'number')
 	#print "statement 1"
 
 def p_statement2(p):
@@ -172,12 +173,12 @@ def p_expression1(p):
 
 def p_expression2(p):
 	'''expression : addingOperator term'''
-	p[0] = expression2(p[1],p[2],"expression2")
+	p[0] = expression2(p[1],p[2],"expression2",'number')
 	#print "expresion 2"
 
 def p_expression3(p):
 	'''expression : expression addingOperator term'''
-	p[0] = expression3(p[1],p[2],p[3],"expression3")
+	p[0] = expression3(p[1],p[2],p[3],"expression3",'number')
 	#print "expresion 3"
 
 def p_addingOperator1(p):
@@ -192,12 +193,12 @@ def p_addingOperator2(p):
 
 def p_term1(p):
 	'''term : factor'''
-	p[0] = term1(p[1],"term1")
+	p[0] = term1(p[1],"term1",'number')
 	#print "term 1"
 
 def p_term2(p):
 	'''term : term multiplyingOperator factor'''
-	p[0] = term2(p[1],p[2],p[3],"term2")
+	p[0] = term2(p[1],p[2],p[3],"term2",'number')
 	#print "term 1"
 
 def p_multiplyingOperator1(p):
@@ -222,7 +223,7 @@ def p_factor2(p):
 
 def p_factor3(p):
 	'''factor : LPARENT expression RPARENT'''
-	p[0] = factor3(p[2],"factor3")
+	p[0] = factor3(p[2],"factor3",'number')
 	#print "factor 1"
 
 def p_empty(p):
@@ -263,8 +264,8 @@ def traducir(data, fileName):
 		graphFile.write(data)
 		graphFile.close()
 	print (f"El programa traducido se guardo en \"{fileName}.vz\"")
-	#TODO: Add argument to bash that match filename input and out fileName .png
-	subprocess.run(["compilerLogic/controller/src/graphBash.sh", f'{fileName}', f'{fileName}']) #TODO: MAYBE THIS NOT WORK FOR WINDOWS
+	fileBinProcess ="compilerLogic/controller/src/graphBash.sh" if platform.system() == 'Linux' else "compilerLogic/controller/src/graphBash.cmd"
+	subprocess.run([fileBinProcess, f'{fileName}']) #TODO: MAYBE THIS NOT WORK FOR WINDOWS
 	
 
 def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
@@ -274,9 +275,9 @@ def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
 			cadena= inputFromRequest.replace('\r\n', '\n')
 			parsedData = yacc.parse(cadena,debug=1)
 			restartState()
-			traducir(parsedData.traducir(), "graphviztrhee")
+			traducir(parsedData.traducir(), "sintactico")
 			restartState()
-			traducir(parsedData.traducir(withType=True), "semantic")
+			traducir(parsedData.traducir(withType=True), "semantico")
 
 		else:	
 			parser = yacc.yacc()
