@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.shortcuts import redirect
+
+def redirect_view(request):
+    response = redirect('compiler/')
+    return response
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('compiler/', include('compilerLogic.urls'))
+    path('compiler/', include('compilerLogic.urls')),
+    path("", redirect_view) 
+    
 ]

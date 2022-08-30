@@ -1,41 +1,7 @@
-#reservadas
+CONST X = 20;
 
 BEGIN
+    IF X >= 10 THEN ! 10;
+    IF X >= 20 THEN ! 20;
+    IF X >= 30 THEN ! 30
 END
-IF
-THEN
-WHILE
-DO
-CALL
-CONST
-VAR
-PROCEDURE
-OUT
-IN
-ELSE
-
-#tokens
-
-identificador1
-23412
-+
--
-*
-/
-ODD
-=
-<>
-<
-<=
->
->=
-(
-)
-,
-;
-.
-:=
-
-
-
-

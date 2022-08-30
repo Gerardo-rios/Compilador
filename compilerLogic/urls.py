@@ -5,7 +5,7 @@ from django.urls import path, re_path
 
 urlpatterns = [
     # ex: /compiler -> main page
-    path('', views.test, name='index'),
+    path('', views.index, name='index'),
     re_path(r'^.*\.*', views.pages, name='pages'),
     #path('test', views.test, name='test'),
     ## ex: /compiler/lex-analyzer

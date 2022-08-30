@@ -8,6 +8,7 @@
 {% block content %}
 
 <form method="POST" style="display:flex;">
+  {% csrf_token %}
     <div class="row">
         <div class="col-lg-12 col-md-12">
             <p >Seleccione uno de nuestros archivos de ejemplo o Ingrese el código en el cuadro de texto >.o
@@ -31,20 +32,38 @@
                       <td>
                         <div class="form-check">
                           <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="" checked>
-                            <span class="form-check-sign">
-                              <span class="check"></span>
-                            </span>
+                            {% if not dataFile or dataFile == '0' %}
+                            <input type="radio" style="visibility:hidden;"name="testFile" value="0" checked>
+                            {% else %}
+                            <input type="radio"  style="visibility:hidden;" name="testFile" value="0" >
+                            {% endif %}
                           </label>
                         </div>
                       </td>
-                      <td>Sign contract for "What are conference organizers afraid of?"</td>
+                      <td>Ingresar mi codigo PL0</td>
                       <td class="td-actions text-right">
-                        <button type="button" rel="tooltip" title="Previsualizar Contenido" class="btn btn-primary btn-link btn-sm">
+                        <a rel="tooltip" title="Ingresar Contenido" class="btn btn-primary btn-link btn-sm" href="{{request.get_path}}?dataFile=0" >
                           <i class="material-icons">visibility</i>
-                        </button>
+                        </a>
                       </td>
                     </tr>
+                    {% for value in '12345' %}
+                    <tr>
+                      <td>
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input type="radio"  style="visibility:hidden;" name="testFile" value="{{value}}"   {% if value == dataFile %} checked {% endif %}>
+                          </label>
+                        </div>
+                      </td>
+                      <td>Prueba{{value}}.pl0</td>
+                      <td class="td-actions text-right">
+                        <a rel="tooltip" title="Selecionar Contenido" class="btn btn-primary btn-link btn-sm" href="{{request.get_path}}?dataFile={{value}}" >
+                          <i class="material-icons">visibility</i>
+                        </a>
+                      </td>
+                    </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>
@@ -62,10 +81,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label>Input code</label>
+                  <label>Type your code pl0 here</label>
                   <div class="form-group">
-                    <label class="bmd-label-floating"> your pl0 code here....</label>
-                    <textarea class="form-control" rows="12"></textarea>
+                    <textarea class="form-control" name="cadena" id="cadena" rows="14" {% if dataFile and dataFile != '0' %} readonly {% endif %}>{{cadena}}</textarea>           
                   </div>
                 </div>
               </div>

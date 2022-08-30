@@ -80,8 +80,8 @@ def t_NUMBER(t):
 	return t
 
 def t_error(t):
-	print ("caracter ilegal '%s'" % t.value[0])
-	t.lexer.skip(1)
+  print ("caracter ilegal %s" % t.value.encode("utf-8"))
+  t.lexer.skip(1)
 
 def buscarFicheros(DIRECTORIO, fileNumber):
 	ficheros = []
@@ -91,7 +91,7 @@ def buscarFicheros(DIRECTORIO, fileNumber):
 	for base, dirs, files in os.walk(DIRECTORIO):
 		ficheros.append(files)
 
-	for file in files:
+	for file in sorted(files):
 		print (str(cont)+". "+file)
 		cont = cont+1
 	while respuesta == False:
@@ -106,17 +106,35 @@ def buscarFicheros(DIRECTORIO, fileNumber):
 	return files[int(numArchivo)-1]
 
 
-
-
-def doAnalysis(fileNumber):
-  archivo = buscarFicheros(DIRECTORIO, fileNumber)
+def readFile(fileNumber):
+  archivo = f'prueba{fileNumber}.pl0'
   test = os.path.join(DIRECTORIO,archivo)
   fp = codecs.open(test,"r","utf-8")
   cadena = fp.read()
-  fp.close()
+  return cadena
+
+def doAnalysis(fileNumber= None, inputCadena=''):
+  if inputCadena and (fileNumber == None or fileNumber == '0'):
+    cadena = inputCadena.replace('\r\n','\n')
+  
+  if fileNumber != None and fileNumber != '0':
+    archivo = f'prueba{fileNumber}.pl0'
+    test = os.path.join(DIRECTORIO,archivo)
+    fp = codecs.open(test,"r","utf-8")
+    cadena = fp.read()
+    fp.close()
+  
   analizador = lex.lex()
+
+
+
+  #if hasattr(analizador, "lexstatestack"):
+  #  print("analizador", analizador.lexstatestack)
+  #  while len(analizador.lexstatestack) > 0:
+  #    analizador.pop_state()
+  
   analizador.input(cadena)
-  data = []
+  data = []	
   while True:
     token = analizador.token()
     if not token : break
@@ -127,4 +145,4 @@ def doAnalysis(fileNumber):
     # lineno = número de linea del token 
     # lexpos = posicion del token en la linea (número en espacios donde inicia token) 
     data.append(token)
-  return data
+  return data, analizador

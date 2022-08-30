@@ -2,10 +2,15 @@ import ply.yacc as yacc
 import os
 import codecs
 import re
-from analizadorLexico import tokens
+from .analizadorLexico import tokens
 from sys import stdin
-from analizadorSemantico import *
+from .analizadorSemantico import * 
 import subprocess
+import platform
+
+
+
+DIRECTORIO = os.path.abspath(os.path.join('compilerLogic',"controller","test"))
 
 precedence = (
 	('right','ID','CALL','BEGIN','IF','WHILE'),
@@ -33,7 +38,7 @@ def p_block(p):
 
 def p_constDecl(p):
 	'''constDecl : CONST constAssignmentList SEMMICOLOM'''
-	p[0] = constDecl(p[2],"constDecl")
+	p[0] = constDecl(p[2],"constDecl", 'number')
 	#print "constDecl"
 
 def p_constDeclEmpty(p):
@@ -43,17 +48,17 @@ def p_constDeclEmpty(p):
 
 def p_constAssignmentList1(p):
 	'''constAssignmentList : ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList1(Id(p[1]),Assign(p[2]),Number(p[3]),"constAssignmentList1")
+	p[0] = constAssignmentList1(Id(p[1],'number'),Assign(p[2]),Number(p[3],'number'),"constAssignmentList1",'number')
 	#print "constAssignmentList 1"
 
 def p_constAssignmentList2(p):
 	'''constAssignmentList : constAssignmentList COMMA ID ASSIGN NUMBER'''
-	p[0] = constAssignmentList2(p[1],Id(p[3]),Assign(p[4]),Number(p[5]),"constAssignmentList2")
+	p[0] = constAssignmentList2(p[1],Id(p[3],'number'),Assign(p[4]),Number(p[5],'number'),"constAssignmentList2",'number')
 	#print "constAssignmentList 2"
 
 def p_varDecl1(p):
 	'''varDecl : VAR identList SEMMICOLOM'''
-	p[0] = varDecl1(p[2],"VarDecl1")
+	p[0] = varDecl1(p[2],"VarDecl1",'number')
 	#print "varDecl 1"
 
 def p_varDeclEmpty(p):
@@ -83,7 +88,7 @@ def p_procDeclEmpty(p):
 
 def p_statement1(p):
 	'''statement : ID UPDATE expression'''
-	p[0] = statement1(Id(p[1]),Update(p[2]),p[3],"statement1")
+	p[0] = statement1(Id(p[1]),Update(p[2]),p[3],"statement1",'number')
 	#print "statement 1"
 
 def p_statement2(p):
@@ -168,12 +173,12 @@ def p_expression1(p):
 
 def p_expression2(p):
 	'''expression : addingOperator term'''
-	p[0] = expression2(p[1],p[2],"expression2")
+	p[0] = expression2(p[1],p[2],"expression2",'number')
 	#print "expresion 2"
 
 def p_expression3(p):
 	'''expression : expression addingOperator term'''
-	p[0] = expression3(p[1],p[2],p[3],"expression3")
+	p[0] = expression3(p[1],p[2],p[3],"expression3",'number')
 	#print "expresion 3"
 
 def p_addingOperator1(p):
@@ -188,12 +193,12 @@ def p_addingOperator2(p):
 
 def p_term1(p):
 	'''term : factor'''
-	p[0] = term1(p[1],"term1")
+	p[0] = term1(p[1],"term1",'number')
 	#print "term 1"
 
 def p_term2(p):
 	'''term : term multiplyingOperator factor'''
-	p[0] = term2(p[1],p[2],p[3],"term2")
+	p[0] = term2(p[1],p[2],p[3],"term2",'number')
 	#print "term 1"
 
 def p_multiplyingOperator1(p):
@@ -208,17 +213,17 @@ def p_multiplyingOperator2(p):
 
 def p_factor1(p):
 	'''factor : ID'''
-	p[0] = factor1(Id(p[1]),"factor1")
+	p[0] = factor1(Id(p[1]),"factor1" )
 	#print "factor 1"
 
 def p_factor2(p):
 	'''factor : NUMBER'''
-	p[0] = factor2(Number(p[1]),"factor2")
+	p[0] = factor2(Number(p[1]),"factor2", 'number')
 	#print "factor 1"
 
 def p_factor3(p):
 	'''factor : LPARENT expression RPARENT'''
-	p[0] = factor3(p[2],"factor3")
+	p[0] = factor3(p[2],"factor3",'number')
 	#print "factor 1"
 
 def p_empty(p):
@@ -253,31 +258,54 @@ def buscarFicheros(directorio, fileNumber):
 
 	return files[int(numArchivo)-1]
 
-def traducir(result):
-	graphFile = open('graphviztrhee.vz','w')
-	graphFile.write(result.traducir())
-	graphFile.close()
-	print ("El programa traducido se guardo en \"graphviztrhee.vz\"")
-
-def doAnalysis(fileNumber = 0, inputFromRequest = ''):
-	yacc.yacc()
-	if (inputFromRequest != '' and fileNumber == 0):
-		parsedData = yacc.parse(inputFromRequest,debug=1)
-		traducir(parsedData)
-	else:
-		directorio = os.path.dirname(os.path.abspath('../prueba1.pl0'))+r'\test'
-		archivo = buscarFicheros(directorio, fileNumber)
-		test = (directorio) + '\\' +(archivo)
-		fp = codecs.open(test,"r","utf-8")
-		cadena = fp.read()
-		fp.close()
-		result = yacc.parse(cadena,debug=1)
-		traducir(result)
+def traducir(data, fileName):
+	with open(f'{fileName}.vz','w') as graphFile:
+		graphFile.truncate(0)
+		graphFile.write(data)
+		graphFile.close()
+	print (f"El programa traducido se guardo en \"{fileName}.vz\"")
+	fileBinProcess ="compilerLogic/controller/src/graphBash.sh" if platform.system() == 'Linux' else "compilerLogic/controller/src/graphBash.cmd"
+	subprocess.run([fileBinProcess, f'{fileName}']) #TODO: MAYBE THIS NOT WORK FOR WINDOWS
 	
-	subprocess.run("graphBash.cmd" or "graphBash.sh")
 
-cadenosis = "CONST\nm=7,\nn=85;\n#flgmsdglsm .,,sdf'\nVAR\n  x, y, z, q, r;\nPROCEDURE multiply;\nVAR a, b;\nBEGIN\n  a := x;\n  b := y;\n  z := 0;\nEND;"
-print(doAnalysis(0, cadenosis))
+def doAnalysis(fileNumber = '0', inputFromRequest = '', lexer = None):
+	try:
+		if (inputFromRequest != '' and fileNumber == '0'):
+			parser = yacc.yacc()
+			cadena= inputFromRequest.replace('\r\n', '\n')
+			parsedData = yacc.parse(cadena,debug=1)
+			restartState()
+			traducir(parsedData.traducir(), "sintactico")
+			restartState()
+			traducir(parsedData.traducir(withType=True), "semantico")
+
+		else:	
+			parser = yacc.yacc()
+			archivo = f'prueba{fileNumber}.pl0'
+			test = os.path.join(DIRECTORIO,archivo)
+			fp = codecs.open(test,"r","utf-8")
+			cadena = fp.read()
+			print("cadena: ", cadena)
+			parser = yacc.yacc()
+			#if hasattr(parser, "lexstatestack"):
+			#	
+			#	print("analizador", parserl.lexstatestack)
+			#while len(parser.lexstatestack) > 0:
+			#	parser.pop_state()
+			#
+			fp.close()
+			result = parser.parse(cadena, lexer=lexer)
+			#state()
+			restartState()
+			#state()
+			traducir(result.traducir(), "sintactico")
+			restartState()
+			traducir(result.traducir(withType=True), "semantico")
+	except Exception as e:
+			print(e)
+
+#cadenosis = "CONST\nm=7,\nn=85;\n#flgmsdglsm .,,sdf'\nVAR\n  x, y, z, q, r;\nPROCEDURE multiply;\nVAR a, b;\nBEGIN\n  a := x;\n  b := y;\n  z := 0;\nEND;"
+#print(doAnalysis(0, cadenosis))
 
 
 

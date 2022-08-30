@@ -1,0 +1,153 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Analizador Léxico {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title ">Analizador Léxico</h4>
+                  <p class="card-category"> La tabla muestra los resultados del análisis léxico del archivo <br>TOKENS:</br>
+                  </p>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table" id="lexicoTable" >
+                      <thead class=" text-primary">
+                        <th>
+                          ID
+                        </th>
+                        <th>
+                          Tipo
+                        </th>
+                        <th>
+                          Valor
+                        </th>
+                        <th>
+                          Nro Linea
+                        </th>
+                        <th>
+                          Posición
+                        </th>
+                      </thead>
+                      <tbody>
+                        {% for token in data %}
+                        <tr>
+                          <td>
+                            {{forloop.counter}}
+                          </td>
+                          <td>
+                            {{token.type}}
+                          </td>
+                          <td>
+                            {{token.value}}
+                          </td>
+                          <td class="text-primary">
+                            {{token.lineno}}
+                          </td>
+                          <td class="text-primary">
+                            {{token.lexpos}}
+                          </td>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header card-header-primary">
+                <h4 class="card-title ">Analizador Sintáctico</h4>
+                <p class="card-category">El resultado muestra la imagen del arbol del análisis sintáctico
+                </p>
+              </div>
+              <div class="card-body">
+                <div id="img-container-sin" class="col-6"  >
+                  <img class="img-fluid" alt="Responsive image" src="/static/assets/img/sintactico.png"> </img>
+                </div>
+                <hr/>
+
+                <a class="btn btn-primary" style="font-size:xx-small;"href="/static/assets/img/semantico.png" target="_blank" >Pantalla completa</a> 
+                
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title ">Analizador Semántico</h4>
+              <p class="card-category">El resultado muestra la imagen del arbol del análisis semántico
+              </p>
+            </div>
+            <div class="card-body">
+              <div id="img-container-sem" class="col-6"  >
+                <img class="img-fluid" alt="Responsive image" src="/static/assets/img/semantico.png"> </img>
+              </div>
+              <hr/>
+
+              <a class="btn btn-primary" style="font-size:xx-small;"href="/static/assets/img/semantico.png" target="_blank" >Pantalla completa</a> 
+              
+            </div>
+          </div>>
+        </div>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://unpkg.com/js-image-zoom@0.7.0/js-image-zoom.js" type="application/javascript"></script>
+
+
+<script>
+  $(document).ready( function () {
+    $('#lexicoTable').DataTable()
+} );
+
+
+
+  //function zoom(){
+  //  let element = document.getElementById("img-container")
+  //  if(element.classList.contains("col-12")){
+  //    element.classList.remove("col-12")
+  //    element.classList.add("col-6")
+//
+  //  }else{
+  //    element.classList.remove("col-6")
+  //    element.classList.add("col-12")
+//
+  //  }
+  //}
+
+
+
+  var options2 = {
+      fillContainer: true,
+      zoomPosition: 'right',
+      offset: {vertical: 0, horizontal: 0},
+      zoomStyle : {
+        'border': '1px solid #000',
+        'background-color': '#fff',
+        'opacity': '0.5'
+      }
+  };
+  
+  new ImageZoom(document.getElementById("img-container-sem"), options2);
+  new ImageZoom(document.getElementById("img-container-sin"), options2);
+  
+  
+</script>
+
+{% endblock javascripts %}

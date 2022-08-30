@@ -1,11 +1,12 @@
 import os
-from django.shortcuts import render
+from urllib.parse import urlencode
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-
 from .controller.src import analizadorLexico 
-def index(request):
+from .controller.src import analizadorSintactico
+def indexv2(request):
     """"
     Cargar los analizadores en chevere
     Cuando uno sea elegido, se pasa a la vista de abajo para hacer el análisis
@@ -35,14 +36,19 @@ def results(request):
     data = analizadorLexico.doAnalysis(fileIndex)
     return render(request, 'analyzers/result.html', {'data': data})
 
-def test(request):
-    """
-    ACÁ LLAMAS AL METODO DEL ANALIZADOR CORRESPONDIENTE, 
-    PASANDOLE EL NUMERO DE ARCHIVO EN ESTE CASO
-    Y EN ESTA VISTA SE CARGARÍAN LOS RESULTADOS
-    """
-
-    return render(request, 'home/index.html')
+def index(request):
+    requestIndexFile = request.GET.get('dataFile', '0')
+    indexFile = requestIndexFile if int(requestIndexFile) <=6 and int(requestIndexFile) >0  else '0'
+    cadena=  analizadorLexico.readFile(indexFile) if indexFile != '0' else ''
+    if request.method == 'POST':
+        testFilePost = request.POST['testFile'] or 0
+        cadenaPost = request.POST['cadena'] or ''
+        base_url = '/compiler/resultados.html'  
+        query_string =  urlencode({'cadena': cadenaPost, 'dataFile': testFilePost})  
+        url = '{}?{}'.format(base_url, query_string)  
+        return redirect(url)  # 4
+                
+    return render(request, 'home/index.html', { 'dataFile': str(indexFile), 'cadena':cadena})
 
 
 def pages(request):
@@ -53,12 +59,17 @@ def pages(request):
 
         load_template = request.path.split('/')[-1]
 
+
         if load_template == 'admin.html':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template
-        if load_template == 'analizador-lexico.html':
-            fileIndex = request.GET.get('FileIndex', 3)
-            data = analizadorLexico.doAnalysis(fileIndex)
+        if load_template == 'resultados.html':
+            fileIndex = request.GET.get('dataFile', '0')
+            inputCadena = request.GET.get('cadena', '')
+            data , analizador = analizadorLexico.doAnalysis(fileIndex, inputCadena)
+            print("data",data)
+            print("analizador",analizador)
+            analizadorSintactico.doAnalysis(fileIndex, inputCadena, analizador)
             context['data'] = data
                 
         html_template = loader.get_template('home/' + load_template)
