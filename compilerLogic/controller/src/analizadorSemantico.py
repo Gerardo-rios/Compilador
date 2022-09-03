@@ -45,9 +45,10 @@ class Null(Nodo):
 		return id
 
 class program(Nodo):
-	def __init__(self,son1,name, i_type=''):
+	def __init__(self,son1,son2,name, i_type=''):
 		self.name = name
 		self.son1 = son1
+		self.son2 = son2
 		self.tipo = i_type
 
 	def imprimir(self):
@@ -60,11 +61,12 @@ class program(Nodo):
 		id = incremetarContador()
 
 		son1 = self.son1.traducir(withType)
+		son2 = self.son2.traducir(withType)
 
 		txt += getNameHasType(id, self.name, self.tipo, withType)
 		txt += id +"->"+son1+"\n\t"
-		txt += id +"->"+son1+"\n\t"
-
+		txt += id +"->"+son2+"\n\t"
+  
 		return "digraph G {\n\t"+txt+"}"
 
 class block(Nodo):
@@ -212,6 +214,26 @@ class constAssignmentList1(Nodo):
 		txt += id + " -> " + son3 + "\n\t"
 
 		return id
+#
+#
+#class constAssignmentList1_1(Nodo):
+#	def __init__(self,son1, name, i_type=''):
+#		self.name = name
+#		self.son1 = son1
+#		self.tipo = i_type
+#		
+#	def traducir(self,withType=False):
+#		global txt
+#		id = incremetarContador()
+#		
+#		son1 = self.son1.traducir(withType)
+#		print("********son1********\n",son1)
+#
+#		txt += getNameHasType(id, self.name, self.tipo, withType)
+#		txt += id + " -> " + son1 + "\n\t"
+#
+#		return id
+
 
 class constAssignmentList2(Nodo):
 	def __init__(self,son1,son2,son3,son4,name,i_type=''):
@@ -222,14 +244,6 @@ class constAssignmentList2(Nodo):
 		self.son4 = son4
 		self.tipo = i_type
 
-	def imprimir(self,ident):
-		self.son1.imprimir(" "+ident)
-		self.son2.imprimir(" "+ident)
-		self.son3.imprimir(" "+ident)
-		self.son4.imprimir(" "+ident)
-
-		print ((ident + "Nodo: "+self.name))
-			
 	def traducir(self,withType=False):
 		global txt
 		id = incremetarContador()
@@ -486,6 +500,25 @@ class statement5(Nodo):
 
 		return id
 
+class statement6(Nodo):
+  def __init__(self,son1,son2, name,i_type=''):
+    self.name = name
+    self.son1 = son1
+    self.son2 = son2
+    self.tipo = i_type
+  
+  def traducir(self,withType=False):
+    global txt
+    id = incremetarContador()
+    son1 = self.son1.traducir(withType)
+    son2 = self.son2.traducir(withType)
+    
+    txt += getNameHasType(id, self.name, self.tipo, withType)
+    txt += id + " -> " + son1 + "\n\t"
+    txt += id + " -> " + son2 + "\n\t"
+    
+    return id
+
 class statementList1(Nodo):
 	def __init__(self,son1,name,i_type=''):
 		self.name = name
@@ -507,6 +540,25 @@ class statementList1(Nodo):
 		txt += id + " -> " + son1 + "\n\t"
 
 		return id
+
+class statement7(Nodo):
+  def __init__(self,son1,son2, name,i_type=''):
+    self.name = name
+    self.son1 = son1
+    self.son2 = son2
+    self.tipo = i_type
+  
+  def traducir(self,withType=False):
+    global txt
+    id = incremetarContador()
+    son1 = self.son1.traducir(withType)
+    son2 = self.son2.traducir(withType)
+    
+    txt += getNameHasType(id, self.name, self.tipo, withType)
+    txt += id + " -> " + son1 + "\n\t"
+    txt += id + " -> " + son2 + "\n\t"
+    
+    return id
 
 class statementList2(Nodo):
 	def __init__(self,son1,son2,name,i_type=''):
@@ -1003,6 +1055,28 @@ class factor3(Nodo):
 
 		return id
 
+class Question(Nodo):
+	def __init__(self,name,i_type=''):
+		self.name = name
+		self.tipo = i_type 
+
+	def traducir(self,withType=False):
+		global txt
+		id = incremetarContador()
+		txt += getNameHasType(id, self.name, self.tipo, withType)
+
+		return id
+
+class Exclamation(Nodo):
+  def __init__(self,name,i_type=''):
+    self.name = name
+    self.tipo = i_type
+    
+  def traducir(self,withType=False):
+    global txt
+    id = incremetarContador()
+    txt += getNameHasType(id, self.name, self.tipo, withType)
+    return id
 class Id(Nodo):
 	def __init__(self,name,i_type=''):
 		self.name = name
@@ -1200,6 +1274,19 @@ class Number(Nodo):
 		txt += getNameHasType(id, str(self.name), self.tipo, withType)
 
 		return id
+
+class Dot(Nodo):
+	def __init__(self,name,i_type=''):
+		self.name = name
+		self.tipo = i_type
+  
+	def traducir(self,withType=False):
+		global txt
+		id = incremetarContador()
+		txt += getNameHasType(id, self.name, self.tipo, withType)
+
+		return id
+
 
 class empty(Nodo):
 	def __init__(self,name):
