@@ -24,12 +24,13 @@ precedence = (
 	('left','TIMES','DIVIDE'),
 	('right','ODD'),
 	('left','LPARENT','RPARENT'),
+	('EXCLAMATION','NUMBER'),
 	)
 
 def p_program(p):
-	'''program : block'''
+	'''program : block DOT'''
 	#print "program"
-	p[0] = program(p[1],"program")
+	p[0] = program(p[1],Dot(p[2]),"program")
 
 def p_block(p):
 	'''block : constDecl varDecl procDecl statement'''
@@ -109,6 +110,16 @@ def p_statement4(p):
 def p_statement5(p):
 	'''statement : WHILE condition DO statement'''
 	p[0] = statement5(p[2],p[4],"statement5")
+	#print "statement 5"
+
+def p_statement6(p):
+  '''statement : QUESTION ID'''
+  p[0] = statement6(Question(p[1]),Id(p[2],'number'),"statement6")
+	#print "statement 5"
+
+def p_statement7(p):
+  '''statement : EXCLAMATION expression'''
+  p[0] = statement7(Exclamation(p[1]),p[2],"statement7")
 	#print "statement 5"
 
 def p_statementEmpty(p):

@@ -135,3 +135,7 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+semantico.vz
+sintactico.vz
+compilerLogic/controller/src/parsetab.py
+compilerLogic/controller/src/parser.out
